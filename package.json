@@ -1,0 +1,61 @@
+{
+  "name": "3kles-corem3api",
+  "version": "1.0.0",
+  "description": "3KLES Core M3 API",
+  "main": "dist/index.m3.js",
+  "typings": "dist/index.m3.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "http://gitlab.3kles.local/corejsteam/3kles-corem3api.git"
+  },
+  "keywords": [],
+  "author": "Jeremy Chaut",
+  "license": "ISC",
+  "bugs": {
+    "url": "http://gitlab.3kles.local/corejsteam/3kles-corem3api/issues"
+  },
+  "homepage": "http://gitlab.3kles.local/corejsteam/3kles-corem3api",
+  "scripts": {
+    "dev": "nodemon --exec ts-node index.ts",
+    "test": "nodemon --exec ts-node src/app.ts",
+    "build": "gulp build"
+  },
+  "dependencies": {
+    "btoa": "^1.2.1",
+    "express": "^4.16.3",
+    "express-validation": "^1.0.2",
+    "https": "^1.0.0",
+    "joi": "^13.6.0",
+    "jsonwebtoken": "^8.2.1",
+    "ts-node": "^5.0.1",
+    "tsc": "^1.20150623.0",
+    "typescript": "^2.7.2"
+  },
+  "devDependencies": {
+    "3kles-corebe": "^1.0.0",
+    "@babel/core": "^7.1.0",
+    "@types/express": "^4.11.1",
+    "@types/express-jwt": "0.0.40",
+    "@types/jsonwebtoken": "^7.2.8",
+    "@types/node": "^9.4.6",
+    "babel-preset-env": "^1.7.0",
+    "babelify": "^10.0.0",
+    "browserify": "^16.2.3",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.4.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-mocha": "^6.0.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-tap": "^1.0.1",
+    "gulp-terser": "^1.1.5",
+    "gulp-uglify": "^3.0.1",
+    "gulp-use-tsconfig": "^1.2.2",
+    "gulp-util": "^3.0.8",
+    "mocha": "^5.2.0",
+    "run-sequence": "^2.2.1",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}
