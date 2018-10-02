@@ -10,8 +10,8 @@ import { M3AuthToken } from './m3.auth';
 
 export class M3App extends GenericApp {
 
-	constructor(params: IM3Parameter[], authParam?: IM3Parameter) {
-		super();
+	constructor(params: IM3Parameter[], authParam?: IM3Parameter, middleware?: any) {
+		super(middleware);
 		const service: GenericService = new GenericService(new M3API(), params);
 		const controller: M3Controller = new M3Controller(service);
 		if (authParam) {
