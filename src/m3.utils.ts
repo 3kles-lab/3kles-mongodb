@@ -1,6 +1,6 @@
 import { M3Controller } from "./m3.controller";
 import { IMIRequest, IMIResult, IM3Parameter } from "./m3.interface";
-import { FileUtil } from "../node_modules/3kles-corebe";
+import { FileUtil } from "3kles-corebe";
 
 export class M3Utils {
 
