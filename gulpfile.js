@@ -111,7 +111,7 @@ gulp.task('clean-build', () => {
 
 
 // TESTING
-gulp.task('test', () =>
+gulp.task('test', ['transpile'], () =>
 	gulp.src('test/test.js', { read: false })
 		// `gulp-mocha` needs filepaths so you can't have any plugins before it
 		.pipe(mocha({
@@ -121,7 +121,7 @@ gulp.task('test', () =>
 );
 
 // WATCH
-gulp.task('watch', ['build'], () => {
+gulp.task('watch', ['transpile'], () => {
 	return gulp.src(tsConfig)
 		.pipe(useTsConfig.watch());
 });
