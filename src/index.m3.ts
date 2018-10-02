@@ -5,3 +5,4 @@ export * from './m3.router';
 export * from './m3.secure.router';
 export * from './m3.api';
 export * from './m3.auth';
+export * from './m3.app';
