@@ -14,6 +14,7 @@ var browserify = require('browserify');
 var gutil = require('gulp-util');
 var runSequence = require('run-sequence');
 var mocha = require('gulp-mocha');
+var exec = require('child_process').exec;
 var tsConfig = './tsconfig.json';
 
 const DIST_DIR = 'dist';
@@ -107,6 +108,67 @@ gulp.task('clean-dist', () => {
 gulp.task('clean-build', () => {
 	return gulp.src(BUILD_DIR, { force: true })
 		.pipe(clean());
+});
+
+// GIT
+gulp.task('git-first', () => {
+	runSequence(
+		'git-init',
+		'git-addremote',
+		'git-addall',
+		'git-commitinit',
+		'git-pushmaster'
+	);
+});
+
+
+gulp.task('git-init', (cb) => {
+	exec('git init', function (err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+		cb(err);
+	  });
+});
+
+gulp.task('git-addremote', (cb) => {
+	exec('git remote add origin http://gitlab.3kles.local/corejsteam/3kles-coremongodb.git', function (err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+		cb(err);
+	  });
+});
+
+gulp.task('git-addall', (cb) => {
+	exec('git add .', function (err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+		cb(err);
+	  });
+});
+
+gulp.task('git-commitinit', (cb) => {
+	exec('git commit -m "Initial commit"', function (err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+		cb(err);
+	  });
+});
+
+gulp.task('git-pushmaster', (cb) => {
+	exec('git push -u origin master', function (err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+		cb(err);
+	  });
+});
+
+// PUBLISH
+gulp.task('publish', ['transpile'], (cb) => {
+	exec('npm publish --force', function (err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+		cb(err);
+	  });
 });
 
 

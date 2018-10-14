@@ -6,7 +6,8 @@
     "node_modules"
   ],
   "watch": [
-    "src/"
+    "src/",
+    "test/"
   ],
   "env": {
     "DEBUG": "3klescorem3api:*"

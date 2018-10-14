@@ -3,7 +3,7 @@ node_modules
 src
 nodemon.json
 index.ts
-gulp.js
+gulpffile.js
 test
 tsconfig.json
 tslint.json
