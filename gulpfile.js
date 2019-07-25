@@ -13,13 +13,25 @@ var rename = require('gulp-rename');
 var browserify = require('browserify');
 var gutil = require('gulp-util');
 var runSequence = require('run-sequence');
-var mocha = require('gulp-mocha');
 var exec = require('child_process').exec;
 var tsConfig = './tsconfig.json';
 
+// INIT VARIABLES
 const DIST_DIR = 'dist';
 const BUILD_DIR = 'build';
 const ALL_JS = '/**/*.js';
+var options = {
+	continueOnError: false, // default = false, true means don't emit error event
+	pipeStdout: false, // default = false, true means stdout is written to file.contents
+	customTemplatingThing: "test" // content passed to lodash.template()
+};
+var reportOptions = {
+	err: true, // default = true, false means don't write err
+	stderr: true, // default = true, false means don't write stderr
+	stdout: true // default = true, false means don't write stdout
+};
+
+
 
 // BUILD
 gulp.task('lint', () => {
@@ -32,19 +44,12 @@ gulp.task('pre-build', () => {
 		.pipe(useTsConfig.clean()); // Remove all .js; .map and .d.ts files
 });
 
-gulp.task('transpile', ['lint', 'pre-build'], () => {
-	return gulp.src(tsConfig)
-		.pipe(useTsConfig.build());// generates .js and optionaly .map anod/or .d.ts files
-});
+gulp.task('transpile', gulp.series('lint','pre-build', () => {
+	  return gulp.src(tsConfig)
+             .pipe(useTsConfig.build());// generates .js and optionaly .map anod/or .d.ts files
+}));
 
-// PROD
-gulp.task('build-prod', () => {
-	runSequence(
-		['clean-dist', 'clean-build'],
-		'transpile',
-		'build-js'
-	);
-});
+
 
 gulp.task('build-js', () => {
 	var files = glob.sync('./' + DIST_DIR + ALL_JS);
@@ -65,6 +70,7 @@ gulp.task('build-js', () => {
 			.pipe(gulp.dest(BUILD_DIR))
 	});
 });
+
 
 
 gulp.task('js', function () {
@@ -93,97 +99,48 @@ gulp.task('js', function () {
 });
 
 // CLEAN
-gulp.task('clean-all', ['clean-dist', 'clean-module'], () => { });
-
 gulp.task('clean-module', () => {
 	return gulp.src('node_modules', { force: true })
 		.pipe(clean());
 });
 
-gulp.task('clean-dist', () => {
+gulp.task('clean-dist', (done) => {
 	return gulp.src(DIST_DIR, { force: true })
-		.pipe(clean());
+		.on('error', () => {
+			console.log('Dist does not exist')
+			done()
+		})
+		.pipe(clean())
+		
 });
 
-gulp.task('clean-build', () => {
+gulp.task('clean-build', (done) => {
 	return gulp.src(BUILD_DIR, { force: true })
+		.on('error', () => {
+			console.log('Build does not exist')
+			done()
+		})
 		.pipe(clean());
-});
-
-// GIT
-gulp.task('git-first', () => {
-	runSequence(
-		'git-init',
-		'git-addremote',
-		'git-addall',
-		'git-commitinit',
-		'git-pushmaster'
-	);
-});
-
-
-gulp.task('git-init', (cb) => {
-	exec('git init', function (err, stdout, stderr) {
-		console.log(stdout);
-		console.log(stderr);
-		cb(err);
-	  });
-});
-
-gulp.task('git-addremote', (cb) => {
-	exec('git remote add origin http://gitlab.3kles.local/corejsteam/3kles-coremongodb.git', function (err, stdout, stderr) {
-		console.log(stdout);
-		console.log(stderr);
-		cb(err);
-	  });
-});
-
-gulp.task('git-addall', (cb) => {
-	exec('git add .', function (err, stdout, stderr) {
-		console.log(stdout);
-		console.log(stderr);
-		cb(err);
-	  });
-});
-
-gulp.task('git-commitinit', (cb) => {
-	exec('git commit -m "Initial commit"', function (err, stdout, stderr) {
-		console.log(stdout);
-		console.log(stderr);
-		cb(err);
-	  });
-});
-
-gulp.task('git-pushmaster', (cb) => {
-	exec('git push -u origin master', function (err, stdout, stderr) {
-		console.log(stdout);
-		console.log(stderr);
-		cb(err);
-	  });
 });
 
 // PUBLISH
-gulp.task('publish', ['transpile'], (cb) => {
+gulp.task('publish', gulp.series('transpile', (cb) => {
 	exec('npm publish --force', function (err, stdout, stderr) {
 		console.log(stdout);
 		console.log(stderr);
 		cb(err);
-	  });
-});
+	});
+}));
 
-
-// TESTING
-gulp.task('test', ['transpile'], () =>
-	gulp.src('test/test.js', { read: false })
-		// `gulp-mocha` needs filepaths so you can't have any plugins before it
-		.pipe(mocha({
-			timeout: 20000,
-			reporter: 'nyan'
-		}))
-);
 
 // WATCH
-gulp.task('watch', ['transpile'], () => {
+gulp.task('watch', gulp.series('transpile'), () => {
 	return gulp.src(tsConfig)
 		.pipe(useTsConfig.watch());
 });
+
+
+// PROD
+gulp.task('build-prod', gulp.series('clean-dist', 'clean-build','transpile','build-js', (done) => {
+	done()
+}));
