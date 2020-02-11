@@ -1,6 +1,6 @@
 import { MongoDBApp } from '../src/mongodb.app';
 import { MongoDBUtils } from '../src/mongodb.utils';
-import environmentSchema from './models/Environment';
+import environmentSchema from './models/environment';
 import configurationSchema from './models/configuration';
 import m3userSchema from './models/m3user';
 import userSchema from './models/user';
