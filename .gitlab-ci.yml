@@ -1,0 +1,27 @@
+image: node:12-alpine
+
+variables:
+  DOCKER_DRIVER: overlay2
+  REGISTRY: 192.168.111.61:5005
+  CONTAINER_IMAGE: $REGISTRY/$CI_PROJECT_PATH
+  
+
+before_script:
+# Ensure that node works correctly
+- npm -v
+- node -v
+# Install gulp globally
+- npm i -g gulp
+
+build:
+  stage: build
+  script:
+    - npm i
+    - gulp build-prod
+
+deploy:
+  stage: deploy
+  script:
+    - npm i
+    - gulp build-prod
+    - gulp publish
