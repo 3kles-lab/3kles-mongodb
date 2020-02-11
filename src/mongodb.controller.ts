@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { Request, Response, NextFunction } from 'express-validation';
+import { Request, Response, NextFunction } from 'express';
 import { ExtendableError, AbstractGenericController } from '3kles-corebe';
 import { MongoDBService } from './mongodb.service';
 

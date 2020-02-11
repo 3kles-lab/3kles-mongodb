@@ -1,6 +1,5 @@
 import * as mongoose from 'mongoose';
-import { datauest, Response, NextFunction } from 'express-validation';
-import { GenericController, GenericService, AbstractGenericService, ExtendableError } from '3kles-corebe';
+import { AbstractGenericService } from '3kles-corebe';
 
 export class MongoDBService extends AbstractGenericService {
 
