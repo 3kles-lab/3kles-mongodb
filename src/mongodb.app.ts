@@ -1,5 +1,5 @@
-import * as mongoose from 'mongoose';
-import * as express from 'express';
+import mongoose from 'mongoose';
+import express from 'express';
 import { GenericApp } from '3kles-corebe';
 
 // Class to create an Express Server from CRUD router and optional port
@@ -21,12 +21,15 @@ export class MongoDBApp extends GenericApp {
 		super.initModule();
 		this.createMongoURLEnvVariable();
 		if (this.app.get('DB_ACTIVE') === 'true') {
-			mongoose.set('debug', true); // TODO
+			// mongoose.set('debug', true); // TODO
 			if (process.env.NODE_ENV === 'developement') {
 				mongoose.set('debug', true);
 			}
 			console.log(this.urlmongodb);
-			mongoose.connect(this.urlmongodb);
+			mongoose.connect(this.urlmongodb, {
+				useNewUrlParser: true,
+				useUnifiedTopology: true
+			});
 			const db = mongoose.connection;
 			(mongoose as any).Promise = global.Promise;
 

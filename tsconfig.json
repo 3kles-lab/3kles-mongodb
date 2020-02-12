@@ -10,7 +10,8 @@
 			"es6"
 		],
 		"noImplicitAny": false,
-		"sourceMap": true
+		"sourceMap": true,
+		"esModuleInterop": true
 	},
 	"include": [
 		"src/**/*.ts"

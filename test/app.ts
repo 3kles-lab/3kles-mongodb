@@ -15,14 +15,14 @@ app.addRoute(MongoDBUtils.buildRouterFromModel(user).router);
 app.addRoute(MongoDBUtils.buildRouterFromModel(Environment).router);
 app.addRoute(MongoDBUtils.buildRouterFromModel(Configuration).router);
 app.addRoute(MongoDBUtils.buildRouterFromModel(M3User).router);
-app.startApp();
+app.startApp(12100);
 
 const routes = [];
-/*app.getRouter().router.stack.forEach((m) => {
+app.getApp()._router.stack.forEach((m) => {
 	if (m.route) {
 		routes.push(Object.keys(m.route.methods) + " -> " + m.route.path);
 	}
 });
-*/
+
 console.log(JSON.stringify(routes, null, 4));
 module.exports = app.getApp(); // For Mocha Testing
