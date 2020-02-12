@@ -9,9 +9,10 @@ export class MongoDBRouter extends GenericRouter {
 	}
 
 	public addController(controller: MongoDBController): void {
-		this.router.route('/' + controller.getParameters().modelname + '/list').get(controller.execute('list'));
+		this.router.route('/' + controller.getParameters().modelname + '/').get(controller.execute('list'));
 		this.router.route('/' + controller.getParameters().modelname + '/:id').get(controller.execute('get'));
 		this.router.route('/' + controller.getParameters().modelname + '/:id').put(controller.execute('update'));
+		this.router.route('/' + controller.getParameters().modelname + '/:id').patch(controller.execute('update'));
 		this.router.route('/' + controller.getParameters().modelname).post(controller.execute('add'));
 		this.router.route('/' + controller.getParameters().modelname + '/:id').delete(controller.execute('delete'));
 	}
