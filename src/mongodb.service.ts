@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
 import { AbstractGenericService } from '3kles-corebe';
+import { userInfo } from 'os';
 
 export class MongoDBService extends AbstractGenericService {
 
@@ -56,12 +57,10 @@ export class MongoDBService extends AbstractGenericService {
 	// Get by id
 	public async get(inputRequest: any): Promise<any> {
 		console.log(inputRequest.params.id);
-		if (mongoose.Types.ObjectId.isValid(inputRequest.params.id)) {
-			try {
-				return await this.model.findOne({ _id: inputRequest.params.id });
-			} catch (err) {
-				throw err;
-			}
+		try {
+			return await this.model.findOne({ _id: inputRequest.params.id });
+		} catch (err) {
+			throw err;
 		}
 	}
 
