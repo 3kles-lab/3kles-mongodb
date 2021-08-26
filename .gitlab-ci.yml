@@ -42,6 +42,7 @@ deploy-internal:
     NPM_REGISTRY: $NPM_PRIVATE_REGISTRY_3KLES
     NPM_TOKEN: $NPM_PRIVATE_TOKEN
   before_script:
+    - npm i -g gulp
     - *configure-npm-repo
   script:
     - gulp publish
