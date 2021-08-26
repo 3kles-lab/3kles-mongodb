@@ -1,27 +1,48 @@
-image: 192.168.111.61:5005/docker/node-internal
+stages:
+  - build
+  - deploy
+
+image: node:lts-alpine
 
 variables:
   DOCKER_DRIVER: overlay2
-  REGISTRY: 192.168.111.61:5005
-  CONTAINER_IMAGE: $REGISTRY/$CI_PROJECT_PATH
-  
 
-before_script:
-# Ensure that node works correctly
-- npm -v
-- node -v
-# Install gulp globally
-- npm i -g gulp
+# For internal build & publish
+.repo-configuration: &configure-npm-repo
+  # Configure internal repo
+  - npm config set strict-ssl false
+  - npm config set registry $NPM_REGISTRY
+  - npm config set ca null
+  - npm config set always-auth true
+  - npm config set _auth $NPM_TOKEN
 
 build:
   stage: build
+  variables:
+    NPM_REGISTRY: $NPM_PRIVATE_REGISTRY
+    NPM_TOKEN: $NPM_PRIVATE_TOKEN
+  before_script:
+    - npm -v
+    - node -v
+    - npm i -g gulp
+    - *configure-npm-repo
   script:
     - npm i
     - gulp build-prod
+  artifacts:
+    expire_in: 1 hour
+    paths:
+        - dist
 
-deploy:
+deploy-internal:
   stage: deploy
+  except:
+    - /^.*-dev$/
+  variables:
+    NPM_REGISTRY: $NPM_PRIVATE_REGISTRY_3KLES
+    NPM_TOKEN: $NPM_PRIVATE_TOKEN
+  before_script:
+    - *configure-npm-repo
   script:
-    - npm i
-    - gulp build-prod
     - gulp publish
+
