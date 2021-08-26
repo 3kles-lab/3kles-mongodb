@@ -1,6 +1,5 @@
 import * as mongoose from 'mongoose';
 import { AbstractGenericService } from '3kles-corebe';
-import { userInfo } from 'os';
 
 export class MongoDBService extends AbstractGenericService {
 
@@ -78,7 +77,7 @@ export class MongoDBService extends AbstractGenericService {
 	public async update(inputRequest: any): Promise<any> {
 		console.log('Data to update:', inputRequest.body);
 		try {
-			return await this.model.update({ _id: inputRequest.params.id }, { $set: inputRequest.body });
+			return await this.model.updateMany({ _id: inputRequest.params.id }, { $set: inputRequest.body });
 		} catch (err) {
 			throw err;
 		}

@@ -6,11 +6,11 @@ import m3userSchema from './models/m3user';
 import userSchema from './models/user';
 
 const app: MongoDBApp = new MongoDBApp('db');
-const Environment = app.getMongoose().model('environment', environmentSchema);
+const Environment = app.getMongoose().model<any>('environment', environmentSchema);
 console.log('Environment=', Environment.collection.name);
-const Configuration = app.getMongoose().model('Configuration', configurationSchema);
-const M3User = app.getMongoose().model('M3User', m3userSchema);
-const user = app.getMongoose().model('users', userSchema);
+const Configuration = app.getMongoose().model<any>('Configuration', configurationSchema);
+const M3User = app.getMongoose().model<any>('M3User', m3userSchema);
+const user = app.getMongoose().model<any>('users', userSchema);
 app.addRoute(MongoDBUtils.buildRouterFromModel(user).router);
 app.addRoute(MongoDBUtils.buildRouterFromModel(Environment).router);
 app.addRoute(MongoDBUtils.buildRouterFromModel(Configuration).router);

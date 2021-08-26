@@ -17,7 +17,7 @@ export class MongoDBApp extends GenericApp {
 		this.app.set('DB_DBNAME', process.env.DB_DBNAME || '');
 	}
 
-	public initModule(): void {
+	public async initModule(): Promise<void> {
 		super.initModule();
 		this.createMongoURLEnvVariable();
 		if (this.app.get('DB_ACTIVE') === 'true') {
@@ -25,11 +25,9 @@ export class MongoDBApp extends GenericApp {
 			if (process.env.NODE_ENV === 'developement') {
 				mongoose.set('debug', true);
 			}
-			console.log(this.urlmongodb);
-			mongoose.connect(this.urlmongodb, {
-				useNewUrlParser: true,
-				useUnifiedTopology: true
-			});
+
+			await mongoose.connect(this.urlmongodb);
+
 			const db = mongoose.connection;
 			(mongoose as any).Promise = global.Promise;
 
