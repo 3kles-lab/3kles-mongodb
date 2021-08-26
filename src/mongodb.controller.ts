@@ -18,15 +18,25 @@ export class MongoDBController extends AbstractGenericController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			try {
 				this.updateParamFromRequest(type, req);
+
+				req.query.per_page = req.query.per_page && +req.query.per_page > 0 ? req.query.per_page : '30';
+				req.query.page = req.query.page && +req.query.page > 0 ? req.query.page : '1';
+
 				const data = {
 					headers: req.headers,
 					params: req.params,
-					body: req.body
+					body: req.body,
+					query: req.query,
 				};
+
 				const response = await this.service.execute(type, data);
-				console.log('Response:', response, ' End');
 				if (!response) throw new ExtendableError(type + '-not-found', 404);
-				res.json(response);
+
+				if (Array.isArray(response.data)) {
+					res.setHeader('Total-Count', response.totalCount);
+				}
+
+				res.json(response.data);
 			} catch (err) {
 				console.log('Catch:', err, 'End');
 				res.status(err.status || 500).json(err);

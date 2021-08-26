@@ -47,7 +47,10 @@ export class MongoDBService extends AbstractGenericService {
 			filter = JSON.parse(inputRequest.headers.filter);
 		}
 		try {
-			return await this.model.find(filter);
+			return {
+				data: await this.model.find(filter).skip((+inputRequest.query.page - 1) * +inputRequest.query.per_page).limit(+inputRequest.query.per_page),
+				totalCount: await this.model.count()
+			};
 		} catch (err) {
 			throw err;
 		}
@@ -57,7 +60,7 @@ export class MongoDBService extends AbstractGenericService {
 	public async get(inputRequest: any): Promise<any> {
 		console.log(inputRequest.params.id);
 		try {
-			return await this.model.findOne({ _id: inputRequest.params.id });
+			return { data: await this.model.findOne({ _id: inputRequest.params.id }) };
 		} catch (err) {
 			throw err;
 		}
@@ -67,7 +70,7 @@ export class MongoDBService extends AbstractGenericService {
 	public async add(inputRequest: any): Promise<any> {
 		const obj = new this.model(inputRequest.body);
 		try {
-			return await obj.save();
+			return { data: await obj.save() };
 		} catch (err) {
 			throw err;
 		}
@@ -77,7 +80,7 @@ export class MongoDBService extends AbstractGenericService {
 	public async update(inputRequest: any): Promise<any> {
 		console.log('Data to update:', inputRequest.body);
 		try {
-			return await this.model.updateMany({ _id: inputRequest.params.id }, { $set: inputRequest.body });
+			return { data: await this.model.updateMany({ _id: inputRequest.params.id }, { $set: inputRequest.body }) };
 		} catch (err) {
 			throw err;
 		}
@@ -86,7 +89,7 @@ export class MongoDBService extends AbstractGenericService {
 	// Delete by id
 	public async delete(inputRequest: any): Promise<any> {
 		try {
-			return await this.model.findOneAndRemove({ _id: inputRequest.params.id });
+			return { data: await this.model.findOneAndRemove({ _id: inputRequest.params.id }) };
 		} catch (err) {
 			throw err;
 		}
