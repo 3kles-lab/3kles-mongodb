@@ -33,6 +33,7 @@ build:
     expire_in: 1 hour
     paths:
         - build
+        - node_modules
 
 deploy-internal:
   stage: deploy
