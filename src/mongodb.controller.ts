@@ -19,7 +19,7 @@ export class MongoDBController extends AbstractGenericController {
 			try {
 				this.updateParamFromRequest(type, req);
 
-				req.query.per_page = req.query.per_page && +req.query.per_page > 0 ? req.query.per_page : '30';
+				req.query.per_page = req.query.per_page && +req.query.per_page >= 0 ? req.query.per_page : '30';
 				req.query.page = req.query.page && +req.query.page > 0 ? req.query.page : '1';
 
 				const data = {
