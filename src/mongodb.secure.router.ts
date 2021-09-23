@@ -1,4 +1,4 @@
-import { SecureRouter } from '3kles-corebe';
+import { SecureRouter } from '@3kles/3kles-corebe';
 import { MongoDBController } from './mongodb.controller';
 
 // Class to create a mongodb router from a mongodbController

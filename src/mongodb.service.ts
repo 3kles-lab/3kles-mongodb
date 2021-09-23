@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { AbstractGenericService } from '3kles-corebe';
+import { AbstractGenericService } from '@3kles/3kles-corebe';
 
 export class MongoDBService extends AbstractGenericService {
 

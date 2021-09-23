@@ -1,4 +1,4 @@
-import { IAuth } from '3kles-corebe';
+import { IAuth } from '@3kles/3kles-corebe';
 import * as mongoose from 'mongoose';
 import { MongoDBController } from "./mongodb.controller";
 import { MongoDBRouter } from "./mongodb.router";

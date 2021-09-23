@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 import { Request, Response, NextFunction } from 'express';
-import { ExtendableError, AbstractGenericController } from '3kles-corebe';
+import { ExtendableError, AbstractGenericController } from '@3kles/3kles-corebe';
 import { MongoDBService } from './mongodb.service';
 
 export class MongoDBController extends AbstractGenericController {

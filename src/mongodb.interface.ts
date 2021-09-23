@@ -1,4 +1,4 @@
-import { IRequestParameter } from '3kles-corebe';
+import { IRequestParameter } from '@3kles/3kles-corebe';
 
 interface IMongoDBParameter extends IRequestParameter {
 	api: string;

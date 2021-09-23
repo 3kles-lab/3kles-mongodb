@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import express from 'express';
-import { GenericApp } from '3kles-corebe';
+import { GenericApp } from '@3kles/3kles-corebe';
 
 // Class to create an Express Server from CRUD router and optional port
 export class MongoDBApp extends GenericApp {
