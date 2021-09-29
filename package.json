@@ -51,8 +51,5 @@
     "run-sequence": "^2.2.1",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
-  },
-  "publishConfig": {
-    "registry": "http://192.168.111.61:8081/repository/npm-3kles/"
   }
 }
