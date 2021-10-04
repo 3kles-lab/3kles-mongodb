@@ -145,4 +145,3 @@ gulp.task('watch', gulp.series('transpile'), () => {
 gulp.task('build-prod', gulp.series('clean-dist', 'clean-build', 'transpile', 'build-js', (done) => {
 	done();
 }));
-
