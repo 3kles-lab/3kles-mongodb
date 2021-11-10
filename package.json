@@ -1,6 +1,6 @@
 {
   "name": "@3kles/3kles-coremongodb",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "3KLES Core MongoDB",
   "main": "dist/index.mongodb.js",
   "typings": "dist/index.mongodb.d.ts",
@@ -24,7 +24,7 @@
     "@3kles/3kles-corebe": "^1.1.0",
     "express": "^4.17.1",
     "joi": "^17.4.2",
-    "mongoose": "^6.0.1"
+    "mongoose": "6.0.1"
   },
   "devDependencies": {
     "ts-node": "^10.2.1",
