@@ -11,10 +11,12 @@ export class MongoDBApp extends GenericApp {
 		// DB CONFIG
 		this.app.set('DB_ACTIVE', process.env.DB_ACTIVE || false);
 		this.app.set('DB_HOST', process.env.DB_HOST || 'localhost');
-		this.app.set('DB_PORT', process.env.DB_PORT || 27017);
+		this.app.set('DB_PORT', process.env.DB_PORT || 0);
 		this.app.set('DB_USER', process.env.DB_USER || '');
 		this.app.set('DB_PWD', process.env.DB_PWD || '');
 		this.app.set('DB_DBNAME', process.env.DB_DBNAME || '');
+		this.app.set('DB_PROTOCOL', process.env.DB_PROTOCOL || 'mongodb');
+		this.app.set('DB_OPTIONS', process.env.DB_OPTIONS);
 	}
 
 	public async initModule(): Promise<void> {
@@ -26,6 +28,8 @@ export class MongoDBApp extends GenericApp {
 				mongoose.set('debug', true);
 			}
 
+			// this.urlmongodb = 'mongodb+srv://admin:3Kles123!@cluster0.d1oyg.mongodb.net/massupload?retryWrites=true&w=majority'
+			console.log('URL Mongodb=', this.urlmongodb);
 			await mongoose.connect(this.urlmongodb);
 
 			const db = mongoose.connection;
@@ -62,11 +66,20 @@ export class MongoDBApp extends GenericApp {
 
 	public createMongoURL(host: string, port: number, dbname: string, user?: string, password?: string): string {
 		console.log('DBNAME=', dbname);
-		this.urlmongodb = 'mongodb://';
+		// this.urlmongodb = 'mongodb://';
+		console.log('DB_PROTOCOL=', this.app.get('DB_PROTOCOL'));
+		this.urlmongodb = this.app.get('DB_PROTOCOL') + '://';
 		if (user) {
 			this.urlmongodb += user + ':' + password + '@';
 		}
-		this.urlmongodb += host + ':' + port + '/' + dbname;
+		if (port === 0) {
+			this.urlmongodb += host + '/' + dbname;
+		} else {
+			this.urlmongodb += host + ':' + port + '/' + dbname;
+		}
+		if (this.app.get('DB_OPTIONS')) {
+			this.urlmongodb += '?' + this.app.get('DB_OPTIONS');
+		}
 		return this.urlmongodb;
 	}
 
