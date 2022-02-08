@@ -49,7 +49,7 @@ export class MongoDBService extends AbstractGenericService {
 		try {
 			return {
 				data: await this.model.find(filter).skip((+inputRequest.query.page - 1) * +inputRequest.query.per_page).limit(+inputRequest.query.per_page),
-				totalCount: await this.model.count()
+				totalCount: await this.model.count(filter)
 			};
 		} catch (err) {
 			throw err;
