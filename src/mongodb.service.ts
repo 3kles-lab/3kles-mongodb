@@ -13,7 +13,6 @@ export class MongoDBService extends AbstractGenericService {
 			switch (type) {
 				case "list": {
 					response = await this.list(data);
-					console.log('Response from execute service=', response);
 					break;
 				}
 				case "get": {
@@ -58,7 +57,6 @@ export class MongoDBService extends AbstractGenericService {
 
 	// Get by id
 	public async get(inputRequest: any): Promise<any> {
-		console.log(inputRequest.params.id);
 		try {
 			return { data: await this.model.findOne({ _id: inputRequest.params.id }) };
 		} catch (err) {
@@ -78,7 +76,6 @@ export class MongoDBService extends AbstractGenericService {
 
 	// Update by id
 	public async update(inputRequest: any): Promise<any> {
-		console.log('Data to update:', inputRequest.body);
 		try {
 			return { data: await this.model.updateMany({ _id: inputRequest.params.id }, { $set: inputRequest.body }) };
 		} catch (err) {
