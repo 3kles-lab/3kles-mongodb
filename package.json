@@ -21,7 +21,7 @@
     "build": "gulp transpile"
   },
   "dependencies": {
-    "@3kles/3kles-corebe": "^1.1.2",
+    "@3kles/3kles-corebe": "^2.1.0",
     "express": "^4.17.1",
     "joi": "^17.4.2",
     "mongoose": "6.0.1"
