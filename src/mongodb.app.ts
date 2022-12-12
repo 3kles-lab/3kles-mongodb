@@ -1,10 +1,15 @@
 import mongoose from 'mongoose';
 import express from 'express';
 import { GenericApp } from '@3kles/3kles-corebe';
+import { MongoDBHealth } from './mongodb.health';
 
 // Class to create an Express Server from CRUD router and optional port
 export class MongoDBApp extends GenericApp {
 	private urlmongodb: string;
+
+	constructor(public middleware?: string, public health?: MongoDBHealth) {
+		super(middleware, health ? health : new MongoDBHealth());
+	}
 
 	public initAppVariable(): void {
 		super.initAppVariable();
