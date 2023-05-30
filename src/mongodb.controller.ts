@@ -33,7 +33,7 @@ export class MongoDBController extends AbstractGenericController {
 				if (!response) throw new ExtendableError(type + '-not-found', 404);
 
 				if (Array.isArray(response.data)) {
-					res.setHeader('Total-Count', response.totalCount);
+					res.setHeader('Total-Count', response.totalCount || response.data.length);
 				}
 
 				res.json(response.data);
