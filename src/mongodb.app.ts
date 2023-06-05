@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 import express from 'express';
+import fs from 'fs';
 import { GenericApp } from '@3kles/3kles-corebe';
 import { MongoDBHealth } from './mongodb.health';
 
 // Class to create an Express Server from CRUD router and optional port
 export class MongoDBApp extends GenericApp {
 	private urlmongodb: string;
+	private option: mongoose.ConnectOptions;
 
 	constructor(public middleware?: string, public health?: MongoDBHealth) {
 		super(middleware, health ? health : new MongoDBHealth());
@@ -22,20 +24,22 @@ export class MongoDBApp extends GenericApp {
 		this.app.set('DB_DBNAME', process.env.DB_DBNAME || '');
 		this.app.set('DB_PROTOCOL', process.env.DB_PROTOCOL || 'mongodb');
 		this.app.set('DB_OPTIONS', process.env.DB_OPTIONS);
+		this.app.set('DB_CERT', process.env.DB_CERT);
+		this.app.set('DB_KEY', process.env.DB_KEY);
 	}
 
 	public async initModule(): Promise<void> {
 		super.initModule();
 		this.createMongoURLEnvVariable();
+		this.initOption();
+
 		if (this.app.get('DB_ACTIVE') === 'true') {
 			// mongoose.set('debug', true); // TODO
 			if (process.env.NODE_ENV === 'developement') {
 				mongoose.set('debug', true);
 			}
-
-			// this.urlmongodb = 'mongodb+srv://admin:3Kles123!@cluster0.d1oyg.mongodb.net/massupload?retryWrites=true&w=majority'
 			console.log('URL Mongodb=', this.urlmongodb);
-			await mongoose.connect(this.urlmongodb);
+			await mongoose.connect(this.urlmongodb, this.option);
 
 			const db = mongoose.connection;
 			(mongoose as any).Promise = global.Promise;
@@ -86,6 +90,24 @@ export class MongoDBApp extends GenericApp {
 			this.urlmongodb += '?' + this.app.get('DB_OPTIONS');
 		}
 		return this.urlmongodb;
+	}
+
+	public initOption() {
+		this.option = {};
+		const dbCertificate = this.app.get('DB_CERT');
+		const dbKey = this.app.get('DB_KEY');
+		if (dbCertificate && dbKey) {
+			const cert = fs.readFileSync(dbCertificate); // Certificat client
+			const key = fs.readFileSync(dbKey); // Clé privée client
+			this.option = {
+				...this.option,
+				ssl: true,
+				sslValidate: true,
+				authMechanism: 'MONGODB-X509',
+				sslCert: cert.toString(),
+				sslKey: key.toString()
+			}
+		}
 	}
 
 	public getMongoose(): mongoose.Mongoose {
