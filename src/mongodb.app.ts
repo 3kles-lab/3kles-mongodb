@@ -92,7 +92,7 @@ export class MongoDBApp extends GenericApp {
 		return this.urlmongodb;
 	}
 
-	public initOption() {
+	public initOption(): void {
 		this.option = {};
 		const dbCertificate = this.app.get('DB_CERT');
 		const dbKey = this.app.get('DB_KEY');
@@ -106,7 +106,7 @@ export class MongoDBApp extends GenericApp {
 				authMechanism: 'MONGODB-X509',
 				sslCert: cert.toString(),
 				sslKey: key.toString()
-			}
+			};
 		}
 	}
 
