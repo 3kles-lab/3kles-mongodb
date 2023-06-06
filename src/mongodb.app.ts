@@ -97,15 +97,13 @@ export class MongoDBApp extends GenericApp {
 		const dbCertificate = this.app.get('DB_CERT');
 		const dbKey = this.app.get('DB_KEY');
 		if (dbCertificate && dbKey) {
-			const cert = fs.readFileSync(dbCertificate); // Certificat client
-			const key = fs.readFileSync(dbKey); // Clé privée client
 			this.option = {
 				...this.option,
 				ssl: true,
 				sslValidate: true,
 				authMechanism: 'MONGODB-X509',
-				sslCert: cert.toString(),
-				sslKey: key.toString()
+				sslCert: dbCertificate,
+				sslKey: dbKey
 			};
 		}
 	}
