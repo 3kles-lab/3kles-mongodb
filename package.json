@@ -1,6 +1,6 @@
 {
   "name": "@3kles/3kles-coremongodb",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "3KLES Core MongoDB",
   "main": "dist/index.mongodb.js",
   "typings": "dist/index.mongodb.d.ts",
