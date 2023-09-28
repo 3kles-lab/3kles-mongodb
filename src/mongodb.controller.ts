@@ -27,13 +27,16 @@ export class MongoDBController extends AbstractGenericController {
 					params: req.params,
 					body: req.body,
 					query: req.query,
+					...req.files && { files: req.files }
 				};
 
 				const response = await this.service.execute(type, data);
 				if (!response) throw new ExtendableError(type + '-not-found', 404);
 
-				if (Array.isArray(response.data)) {
-					res.setHeader('Total-Count', response.totalCount || response.data.length);
+				if (response.totalCount) {
+					res.setHeader('Total-Count', response.totalCount);
+				} else if (Array.isArray(response.data)) {
+					res.setHeader('Total-Count', response.data.length);
 				}
 
 				res.json(response.data);
