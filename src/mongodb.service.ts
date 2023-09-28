@@ -13,7 +13,6 @@ export class MongoDBService extends AbstractGenericService {
 			switch (type) {
 				case "list": {
 					response = await this.list(data);
-					console.log('Response from execute service=', response);
 					break;
 				}
 				case "get": {
@@ -48,7 +47,7 @@ export class MongoDBService extends AbstractGenericService {
 		}
 		try {
 			return {
-				data: await this.model.find(filter).skip((+inputRequest.query.page - 1) * +inputRequest.query.per_page).limit(+inputRequest.query.per_page),
+				data: await this.model.find(filter).skip((+inputRequest.query.page - 1) * +inputRequest.query.per_page).limit(+inputRequest.query.per_page).lean<any>(),
 				totalCount: await this.model.count(filter)
 			};
 		} catch (err) {
@@ -58,9 +57,8 @@ export class MongoDBService extends AbstractGenericService {
 
 	// Get by id
 	public async get(inputRequest: any): Promise<any> {
-		console.log(inputRequest.params.id);
 		try {
-			return { data: await this.model.findOne({ _id: inputRequest.params.id }) };
+			return { data: await this.model.findOne({ _id: inputRequest.params.id }).lean<any>() };
 		} catch (err) {
 			throw err;
 		}
@@ -70,7 +68,7 @@ export class MongoDBService extends AbstractGenericService {
 	public async add(inputRequest: any): Promise<any> {
 		const obj = new this.model(inputRequest.body);
 		try {
-			return { data: await obj.save() };
+			return { data: (await obj.save()).toObject() };
 		} catch (err) {
 			throw err;
 		}
@@ -78,9 +76,8 @@ export class MongoDBService extends AbstractGenericService {
 
 	// Update by id
 	public async update(inputRequest: any): Promise<any> {
-		console.log('Data to update:', inputRequest.body);
 		try {
-			return { data: await this.model.updateMany({ _id: inputRequest.params.id }, { $set: inputRequest.body }) };
+			return { data: await this.model.updateMany({ _id: inputRequest.params.id }, { $set: inputRequest.body }).lean<any>() };
 		} catch (err) {
 			throw err;
 		}
@@ -89,7 +86,7 @@ export class MongoDBService extends AbstractGenericService {
 	// Delete by id
 	public async delete(inputRequest: any): Promise<any> {
 		try {
-			return { data: await this.model.findOneAndRemove({ _id: inputRequest.params.id }) };
+			return { data: await this.model.findOneAndRemove({ _id: inputRequest.params.id }).lean<any>() };
 		} catch (err) {
 			throw err;
 		}
