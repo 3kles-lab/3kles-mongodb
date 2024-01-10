@@ -38,7 +38,6 @@ export class MongoDBApp extends GenericApp {
 			if (process.env.NODE_ENV === 'developement') {
 				mongoose.set('debug', true);
 			}
-			console.log('URL Mongodb=', this.urlmongodb);
 			await mongoose.connect(this.urlmongodb, this.option);
 
 			const db = mongoose.connection;
@@ -74,9 +73,6 @@ export class MongoDBApp extends GenericApp {
 	}
 
 	public createMongoURL(host: string, port: number, dbname: string, user?: string, password?: string): string {
-		console.log('DBNAME=', dbname);
-		// this.urlmongodb = 'mongodb://';
-		console.log('DB_PROTOCOL=', this.app.get('DB_PROTOCOL'));
 		this.urlmongodb = this.app.get('DB_PROTOCOL') + '://';
 		if (user) {
 			this.urlmongodb += user + ':' + password + '@';
