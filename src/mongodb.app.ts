@@ -1,16 +1,15 @@
 import mongoose from 'mongoose';
 import express from 'express';
-import fs from 'fs';
 import { GenericApp } from '@3kles/3kles-corebe';
 import { MongoDBHealth } from './mongodb.health';
 
 // Class to create an Express Server from CRUD router and optional port
 export class MongoDBApp extends GenericApp {
 	private urlmongodb: string;
-	private option: mongoose.ConnectOptions;
+	private connectOptions: mongoose.ConnectOptions;
 
-	constructor(public middleware?: string, public health?: MongoDBHealth) {
-		super(middleware, health ? health : new MongoDBHealth());
+	constructor(public middleware?: string, public health?: MongoDBHealth, public option?: any) {
+		super(middleware, health ? health : new MongoDBHealth(), option);
 	}
 
 	public initAppVariable(): void {
@@ -38,7 +37,7 @@ export class MongoDBApp extends GenericApp {
 			if (process.env.NODE_ENV === 'developement') {
 				mongoose.set('debug', true);
 			}
-			await mongoose.connect(this.urlmongodb, this.option);
+			await mongoose.connect(this.urlmongodb, this.connectOptions);
 
 			const db = mongoose.connection;
 			(mongoose as any).Promise = global.Promise;
@@ -89,12 +88,12 @@ export class MongoDBApp extends GenericApp {
 	}
 
 	public initOption(): void {
-		this.option = {};
+		this.connectOptions = {};
 		const dbCertificate = this.app.get('DB_CERT');
 		const dbKey = this.app.get('DB_KEY');
 		if (dbCertificate && dbKey) {
-			this.option = {
-				...this.option,
+			this.connectOptions = {
+				...this.connectOptions,
 				ssl: true,
 				sslValidate: true,
 				authMechanism: 'MONGODB-X509',
