@@ -22,15 +22,7 @@ export class MongoDBController extends AbstractGenericController {
 				req.query.per_page = req.query.per_page && +req.query.per_page >= 0 ? req.query.per_page : '0';
 				req.query.page = req.query.page && +req.query.page > 0 ? req.query.page : '1';
 
-				const data = {
-					headers: req.headers,
-					params: req.params,
-					body: req.body,
-					query: req.query,
-					...req.files && { files: req.files }
-				};
-
-				const response = await this.service.execute(type, data);
+				const response = await this.service.execute(type, req);
 				if (!response) throw new ExtendableError(type + '-not-found', 404);
 
 				if (response.totalCount) {
