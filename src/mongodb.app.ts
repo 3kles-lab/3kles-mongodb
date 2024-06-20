@@ -15,7 +15,7 @@ export class MongoDBApp extends GenericApp {
 	public initAppVariable(): void {
 		super.initAppVariable();
 		// DB CONFIG
-		this.app.set('DB_ACTIVE', process.env.DB_ACTIVE || false);
+		this.app.set('DB_ACTIVE', process.env.DB_ACTIVE || true);
 		this.app.set('DB_HOST', process.env.DB_HOST || 'localhost');
 		this.app.set('DB_PORT', process.env.DB_PORT || 0);
 		this.app.set('DB_USER', process.env.DB_USER || '');
