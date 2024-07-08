@@ -33,8 +33,6 @@ export class MongoDBController extends AbstractGenericController {
 
 				res.json(response.data);
 			} catch (err) {
-				console.log('Catch:', err, 'End');
-				res.status(err.status || 500).json(err);
 				next(err);
 			}
 		};

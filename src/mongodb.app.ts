@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import express from 'express';
-import { GenericApp } from '@3kles/3kles-corebe';
+import { ExtendableError, GenericApp } from '@3kles/3kles-corebe';
 import { MongoDBHealth } from './mongodb.health';
 
 // Class to create an Express Server from CRUD router and optional port
@@ -111,13 +111,17 @@ export class MongoDBApp extends GenericApp {
 		return this.router;
 	}
 
-	public addRoute(router: express.Router, m?: any): void {
-		if (m) {
-			this.app.use('/' + m, router);
-		} else if (this.middleware) {
-			this.app.use('/' + this.middleware, router);
+	protected errorHandler(err: ExtendableError, req: express.Request, res: express.Response, next: express.NextFunction): void {
+		if (err instanceof mongoose.mongo.MongoError) {
+			switch (err.code) {
+				case 11000:
+					res.status(409).json({ error: err.errmsg });
+					break;
+				default:
+					super.errorHandler(err, req, res, next);
+			}
 		} else {
-			this.app.use('/', router);
+			super.errorHandler(err, req, res, next);
 		}
 	}
 }
