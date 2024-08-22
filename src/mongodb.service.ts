@@ -48,7 +48,7 @@ export class MongoDBService extends AbstractGenericService {
 		try {
 			return {
 				data: await this.model.find(filter).skip((+inputRequest.query.page - 1) * +inputRequest.query.per_page).limit(+inputRequest.query.per_page).lean<any>(),
-				totalCount: await this.model.count(filter)
+				totalCount: await this.model.countDocuments(filter)
 			};
 		} catch (err) {
 			throw err;
@@ -86,7 +86,7 @@ export class MongoDBService extends AbstractGenericService {
 	// Delete by id
 	public async delete(inputRequest: any): Promise<any> {
 		try {
-			return { data: await this.model.findOneAndRemove({ _id: inputRequest.params.id }).lean<any>() };
+			return { data: await this.model.findOneAndDelete({ _id: inputRequest.params.id }).lean<any>() };
 		} catch (err) {
 			throw err;
 		}

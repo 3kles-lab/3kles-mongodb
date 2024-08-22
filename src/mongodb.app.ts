@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import express from 'express';
+import { Router } from 'express';
 import { GenericApp } from '@3kles/3kles-corebe';
 import { MongoDBHealth } from './mongodb.health';
 
@@ -94,11 +94,10 @@ export class MongoDBApp extends GenericApp {
 		if (dbCertificate && dbKey) {
 			this.connectOptions = {
 				...this.connectOptions,
-				ssl: true,
-				sslValidate: true,
+				tls: true,
 				authMechanism: 'MONGODB-X509',
-				sslCert: dbCertificate,
-				sslKey: dbKey
+				tlsCAFile: dbCertificate,
+				tlsCertificateKeyFile: dbKey
 			};
 		}
 	}
@@ -111,7 +110,7 @@ export class MongoDBApp extends GenericApp {
 		return this.router;
 	}
 
-	public addRoute(router: express.Router, m?: any): void {
+	public addRoute(router: Router, m?: any): void {
 		if (m) {
 			this.app.use('/' + m, router);
 		} else if (this.middleware) {

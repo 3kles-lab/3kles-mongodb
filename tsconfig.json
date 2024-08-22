@@ -12,6 +12,7 @@
 		],
 		"noImplicitAny": false,
 		"sourceMap": true,
+		"forceConsistentCasingInFileNames": true,
 		"esModuleInterop": true
 	},
 	"include": [
