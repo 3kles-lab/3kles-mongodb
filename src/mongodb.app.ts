@@ -94,11 +94,11 @@ export class MongoDBApp extends GenericApp {
 		if (dbCertificate && dbKey) {
 			this.connectOptions = {
 				...this.connectOptions,
-				ssl: true,
-				sslValidate: true,
+				tls: true,
 				authMechanism: 'MONGODB-X509',
-				sslCert: dbCertificate,
-				sslKey: dbKey
+				tlsCAFile: dbCertificate,
+				tlsCertificateKeyFile: dbKey
+
 			};
 		}
 	}
