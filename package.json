@@ -26,7 +26,7 @@
     "test-all": "npm run build && npm run link-lib && npm run link-test && npm run test && npm run unlink-test && npm run unlink-lib"
   },
   "dependencies": {
-    "@3kles/3kles-corebe": "^3.0.3",
+    "@3kles/3kles-corebe": "^3.0.4",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "joi": "^17.7.0",
