@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { GenericApp } from '@3kles/3kles-corebe';
 import { MongoDBHealth } from './mongodb.health';
 
+
 // Class to create an Express Server from CRUD router and optional port
 export class MongoDBApp extends GenericApp {
 	private urlmongodb: string;

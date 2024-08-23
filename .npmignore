@@ -4,6 +4,14 @@ src
 index.ts
 test
 tsconfig.json
-tslint.json
+eslintrc.json
 package-lock.json
 yarn.lock
+jest.config.js
+webpack.config.js
+*.yml
+*.md
+.*ignore
+.env
+reports
+report.html
