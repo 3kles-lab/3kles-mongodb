@@ -3,7 +3,7 @@
 		"declaration": true,
 		"module": "commonjs",
 		"skipLibCheck": true,
-		"target": "es5",
+		"target": "es2022",
 		"outDir": "dist",
 		"lib": [
 			"dom",
