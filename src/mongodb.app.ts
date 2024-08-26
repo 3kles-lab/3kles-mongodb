@@ -26,6 +26,7 @@ export class MongoDBApp extends GenericApp {
 		this.app.set('DB_CERT', process.env.DB_CERT);
 		this.app.set('DB_KEY', process.env.DB_KEY);
 		this.app.set('DB_CAFILE', process.env.DB_CAFILE);
+		this.app.set('DB_KEY_CERT', process.env.DB_KEY_CERT);
 	}
 
 	public async initModule(): Promise<void> {
@@ -93,15 +94,17 @@ export class MongoDBApp extends GenericApp {
 		const dbCertificate = this.app.get('DB_CERT');
 		const dbCAFile = this.app.get('DB_CAFILE');
 		const dbKey = this.app.get('DB_KEY');
+		const tlsCertificateKeyFile = this.app.get('DB_KEY_CERT');
 
-		if (dbCertificate || dbKey) {
+		if (dbCertificate || dbKey || tlsCertificateKeyFile) {
 			this.connectOptions = {
 				...this.connectOptions,
 				tls: true,
 				authMechanism: 'MONGODB-X509',
+				...(tlsCertificateKeyFile && { tlsCertificateKeyFile }),
 				...(dbCAFile && { tlsCAFile: dbCAFile }),
-				...(dbCertificate && { tlsCertificateFile: dbCertificate }),
-				...(dbKey && { tlsCertificateKeyFile: dbKey }),
+				...(dbCertificate && { cert: dbCertificate }),
+				...(dbKey && { key: dbKey }),
 			};
 		}
 	}
