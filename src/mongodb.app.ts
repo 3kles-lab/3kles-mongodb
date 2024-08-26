@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import express from 'express';
 import { ExtendableError, GenericApp } from '@3kles/3kles-corebe';
 import { MongoDBHealth } from './mongodb.health';
+import fs from 'fs';
 
 // Class to create an Express Server from CRUD router and optional port
 export class MongoDBApp extends GenericApp {
@@ -103,8 +104,8 @@ export class MongoDBApp extends GenericApp {
 				authMechanism: 'MONGODB-X509',
 				...(tlsCertificateKeyFile && { tlsCertificateKeyFile }),
 				...(dbCAFile && { tlsCAFile: dbCAFile }),
-				...(dbCertificate && { cert: dbCertificate }),
-				...(dbKey && { key: dbKey }),
+				...(dbCertificate && { cert: fs.readFileSync(dbCertificate) }),
+				...(dbKey && { key: fs.readFileSync(dbKey) }),
 			};
 		}
 	}
