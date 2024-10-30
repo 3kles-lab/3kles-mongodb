@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { AbstractGenericService } from '@3kles/3kles-corebe';
+import { AbstractGenericService, ExecuteOption } from '@3kles/3kles-corebe';
 import { ExtendableError } from '@3kles/3kles-corebe';
 
 export class MongoDBService extends AbstractGenericService {
