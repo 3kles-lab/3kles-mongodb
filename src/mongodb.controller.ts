@@ -17,7 +17,7 @@ export class MongoDBController extends GenericController {
 	public getParameters(): any {
 		const data = {
 			model: this.model,
-			modelname: this.model.collection.collectionName
+			modelname: this.model.modelName
 		};
 		return data;
 	}
