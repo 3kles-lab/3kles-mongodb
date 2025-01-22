@@ -1,6 +1,6 @@
 {
   "name": "@3kles/3kles-coremongodb",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "3KLES Core MongoDB",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -26,7 +26,7 @@
     "test-all": "npm run build && npm run link-lib && npm run link-test && npm run test && npm run unlink-test && npm run unlink-lib"
   },
   "dependencies": {
-    "@3kles/3kles-corebe": "^3.2.3",
+    "@3kles/3kles-corebe": "^4.0.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "joi": "^17.7.0",
