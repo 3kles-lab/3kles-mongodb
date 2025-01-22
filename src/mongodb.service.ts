@@ -1,11 +1,11 @@
 import * as mongoose from 'mongoose';
-import { AbstractGenericService, ExecuteOption } from '@3kles/3kles-corebe';
+import { AbstractGenericService, ExecuteOption, ServiceParams } from '@3kles/3kles-corebe';
 import { ExtendableError } from '@3kles/3kles-corebe';
 
 export class MongoDBService extends AbstractGenericService {
 
-	constructor(public model: mongoose.Model<mongoose.Document>) {
-		super();
+	constructor(public model: mongoose.Model<any>, params?: ServiceParams) {
+		super(params);
 	}
 
 	public async execute(type: string, data: any): Promise<any> {

@@ -1,14 +1,14 @@
 import * as mongoose from 'mongoose';
 import * as express from 'express';
-import { GenericController } from '@3kles/3kles-corebe';
+import { ControllerOption, GenericController } from '@3kles/3kles-corebe';
 import { MongoDBService } from './mongodb.service';
 
 export class MongoDBController extends GenericController {
 
-	protected model: mongoose.Model<mongoose.Document>;
+	protected model: mongoose.Model<any>;
 
-	constructor(service: MongoDBService) {
-		super(service);
+	constructor(service: MongoDBService, option?: ControllerOption) {
+		super(service, option);
 
 		this.model = service.model;
 		this.execute.bind(this);

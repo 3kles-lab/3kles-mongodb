@@ -7,13 +7,13 @@ import { MongoDBService } from "./mongodb.service";
 
 export class MongoDBUtils {
 
-	public static buildRouterFromModel(model: mongoose.Model<mongoose.Document>): MongoDBRouter {
+	public static buildRouterFromModel(model: mongoose.Model<any>): MongoDBRouter {
 		const service: MongoDBService = new MongoDBService(model);
 		const controller: MongoDBController = new MongoDBController(service);
 		return new MongoDBRouter(controller);
 	}
 
-	public static buildSecureRouterFromModel(model: mongoose.Model<mongoose.Document>, auth: IAuth): MongoDBRouter {
+	public static buildSecureRouterFromModel(model: mongoose.Model<any>, auth: IAuth): MongoDBRouter {
 		const service: MongoDBService = new MongoDBService(model);
 		const controller: MongoDBController = new MongoDBController(service);
 		return new MongoDBSecureRouter(auth, controller);
