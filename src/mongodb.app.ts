@@ -36,27 +36,37 @@ export class MongoDBApp extends GenericApp {
 		this.initOption();
 
 		if (this.app.get('DB_ACTIVE')) {
-			if (process.env.NODE_ENV === 'developement') {
+			if (process.env.NODE_ENV === 'development') {
 				mongoose.set('debug', true);
 			}
 			const db = mongoose.connection;
 			(mongoose as any).Promise = global.Promise;
 
-			db.on('error', console.error.bind(console, 'connection error:'));
+			db.on('error', (err) => {
+				this.logger.error('MongoDB disconnected!');
+				this.logger.error(err);
+			});
 			db.once('open', () => {
-				console.log('Connected to MongoDB');
+				this.logger.info('Connected to MongoDB');
 			});
 			db.on('connected', () => {
-				console.log('MongoDB connected!');
+				this.logger.info('MongoDB connected!');
 			});
 			db.on('reconnected', () => {
-				console.log('MongoDB reconnected!');
+				this.logger.info('MongoDB reconnected!');
 			});
 			db.on('disconnected', () => {
-				console.log('MongoDB disconnected!');
+				this.logger.warn('MongoDB disconnected!');
 			});
 
-			await mongoose.connect(this.urlmongodb, this.connectOptions);
+			try {
+				await mongoose.connect(this.urlmongodb, this.connectOptions);
+			} catch (error) {
+				this.logger.error('Failed to connect to MongoDB');
+				this.logger.error(error);
+				process.exit(1);
+			}
+
 		} else {
 			this.app.use('/', (err, res) => {
 				res.send('DB Not activated');
