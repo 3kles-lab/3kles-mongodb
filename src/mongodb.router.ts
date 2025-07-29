@@ -3,13 +3,13 @@ import { MongoDBController } from './mongodb.controller';
 import { Router, RouterOptions } from 'express';
 
 // Class to create a mongodb router from a GenericController
-export class MongoDBRouter extends GenericRouter {
+export class MongoDBRouter<T = any> extends GenericRouter {
 
-	constructor(controller: MongoDBController, options?: RouterOptions) {
+	constructor(controller: MongoDBController<T>, options?: RouterOptions) {
 		super(controller, options);
 	}
 
-	public addController(controller: MongoDBController, checker?: any): void {
+	public addController(controller: MongoDBController<T>, checker?: any): void {
 
 		const crudRouter = Router(this.options);
 		crudRouter.route('/').get(controller.execute('list'));

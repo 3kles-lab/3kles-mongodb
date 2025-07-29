@@ -1,5 +1,4 @@
 export * from './mongodb.utils';
-export * from './mongodb.interface';
 export * from './mongodb.controller';
 export * from './mongodb.router';
 export * from './mongodb.secure.router';

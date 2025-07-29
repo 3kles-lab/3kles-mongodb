@@ -3,11 +3,11 @@ import * as express from 'express';
 import { ControllerOption, GenericController } from '@3kles/3kles-corebe';
 import { MongoDBService } from './mongodb.service';
 
-export class MongoDBController extends GenericController {
+export class MongoDBController<T = any> extends GenericController {
 
-	protected model: mongoose.Model<any>;
+	protected model: mongoose.Model<T>;
 
-	constructor(service: MongoDBService, option?: ControllerOption) {
+	constructor(service: MongoDBService<T>, option?: ControllerOption) {
 		super(service, option);
 
 		this.model = service.model;
@@ -21,13 +21,4 @@ export class MongoDBController extends GenericController {
 		};
 		return data;
 	}
-
-	public setResponseHeader(res: express.Response, response: { data: any, totalCount?: number }): void {
-		if (response.totalCount) {
-			res.setHeader('Total-Count', response.totalCount);
-		} else if (response.data && Array.isArray(response.data)) {
-			res.setHeader('Total-Count', response.data.length);
-		}
-	}
-
 }
