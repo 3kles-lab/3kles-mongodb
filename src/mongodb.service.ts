@@ -7,7 +7,7 @@ export class MongoDBService<T = any> extends AbstractGenericService {
         super(params);
     }
 
-    public async execute(type: string, data: any): Promise<ServiceResponse> {
+    public async execute(type: string, data: any): Promise<ServiceResponse | undefined> {
         try {
             let response;
             switch (type) {
