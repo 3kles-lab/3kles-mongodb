@@ -6,7 +6,7 @@
   "typings": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/3kles-lab/3kles-mongodb.git"
+    "url": "git+https://github.com/3kles-lab/3kles-mongodb.git"
   },
   "keywords": [],
   "author": "3Kles Lab",
