@@ -2,9 +2,9 @@ import { SecureRouter } from '@3kles/3kles-corebe';
 import { MongoDBController } from './mongodb.controller';
 
 // Class to create a mongodb router from a mongodbController
-export class MongoDBSecureRouter extends SecureRouter {
+export class MongoDBSecureRouter<T = any> extends SecureRouter {
 
-	public addController(controller: MongoDBController): void {
+	public addController(controller: MongoDBController<T>): void {
 		this.router.route('/' + controller.getParameters().model + '/').get(controller.execute('list'));
 		this.router.route('/' + controller.getParameters().model + '/:id').get(controller.execute('get'));
 		this.router.route('/' + controller.getParameters().model + '/:id').put(controller.execute('update'));

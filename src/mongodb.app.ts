@@ -1,22 +1,22 @@
 import mongoose from 'mongoose';
 import express from 'express';
-import fs from 'fs';
-import { GenericApp } from '@3kles/3kles-corebe';
+import { ExtendableError, GenericApp } from '@3kles/3kles-corebe';
 import { MongoDBHealth } from './mongodb.health';
+import fs from 'fs';
 
 // Class to create an Express Server from CRUD router and optional port
 export class MongoDBApp extends GenericApp {
 	private urlmongodb: string;
-	private option: mongoose.ConnectOptions;
+	private connectOptions: mongoose.ConnectOptions;
 
-	constructor(public middleware?: string, public health?: MongoDBHealth) {
-		super(middleware, health ? health : new MongoDBHealth());
+	constructor(public middleware?: string, public health?: MongoDBHealth, public option?: any) {
+		super(middleware, health ? health : new MongoDBHealth(), option);
 	}
 
 	public initAppVariable(): void {
 		super.initAppVariable();
 		// DB CONFIG
-		this.app.set('DB_ACTIVE', process.env.DB_ACTIVE || false);
+		this.app.set('DB_ACTIVE', process.env.DB_ACTIVE ? process.env.DB_ACTIVE === 'true' : true);
 		this.app.set('DB_HOST', process.env.DB_HOST || 'localhost');
 		this.app.set('DB_PORT', process.env.DB_PORT || 0);
 		this.app.set('DB_USER', process.env.DB_USER || '');
@@ -26,6 +26,8 @@ export class MongoDBApp extends GenericApp {
 		this.app.set('DB_OPTIONS', process.env.DB_OPTIONS);
 		this.app.set('DB_CERT', process.env.DB_CERT);
 		this.app.set('DB_KEY', process.env.DB_KEY);
+		this.app.set('DB_CAFILE', process.env.DB_CAFILE);
+		this.app.set('DB_KEY_CERT', process.env.DB_KEY_CERT);
 	}
 
 	public async initModule(): Promise<void> {
@@ -33,30 +35,38 @@ export class MongoDBApp extends GenericApp {
 		this.createMongoURLEnvVariable();
 		this.initOption();
 
-		if (this.app.get('DB_ACTIVE') === 'true') {
-			// mongoose.set('debug', true); // TODO
-			if (process.env.NODE_ENV === 'developement') {
+		if (this.app.get('DB_ACTIVE')) {
+			if (process.env.NODE_ENV === 'development') {
 				mongoose.set('debug', true);
 			}
-			console.log('URL Mongodb=', this.urlmongodb);
-			await mongoose.connect(this.urlmongodb, this.option);
-
 			const db = mongoose.connection;
 			(mongoose as any).Promise = global.Promise;
 
-			db.on('error', console.error.bind(console, 'connection error:'));
+			db.on('error', (err) => {
+				this.logger.error('MongoDB disconnected!');
+				this.logger.error(err);
+			});
 			db.once('open', () => {
-				console.log('Connected to MongoDB');
+				this.logger.info('Connected to MongoDB');
 			});
 			db.on('connected', () => {
-				console.log('MongoDB connected!');
+				this.logger.info('MongoDB connected!');
 			});
 			db.on('reconnected', () => {
-				console.log('MongoDB reconnected!');
+				this.logger.info('MongoDB reconnected!');
 			});
 			db.on('disconnected', () => {
-				console.log('MongoDB disconnected!');
+				this.logger.warn('MongoDB disconnected!');
 			});
+
+			try {
+				await mongoose.connect(this.urlmongodb, this.connectOptions);
+			} catch (error) {
+				this.logger.error('Failed to connect to MongoDB');
+				this.logger.error(error);
+				process.exit(1);
+			}
+
 		} else {
 			this.app.use('/', (err, res) => {
 				res.send('DB Not activated');
@@ -74,9 +84,6 @@ export class MongoDBApp extends GenericApp {
 	}
 
 	public createMongoURL(host: string, port: number, dbname: string, user?: string, password?: string): string {
-		console.log('DBNAME=', dbname);
-		// this.urlmongodb = 'mongodb://';
-		console.log('DB_PROTOCOL=', this.app.get('DB_PROTOCOL'));
 		this.urlmongodb = this.app.get('DB_PROTOCOL') + '://';
 		if (user) {
 			this.urlmongodb += user + ':' + password + '@';
@@ -93,17 +100,21 @@ export class MongoDBApp extends GenericApp {
 	}
 
 	public initOption(): void {
-		this.option = {};
+		this.connectOptions = {};
 		const dbCertificate = this.app.get('DB_CERT');
+		const dbCAFile = this.app.get('DB_CAFILE');
 		const dbKey = this.app.get('DB_KEY');
-		if (dbCertificate && dbKey) {
-			this.option = {
-				...this.option,
-				ssl: true,
-				sslValidate: true,
+		const tlsCertificateKeyFile = this.app.get('DB_KEY_CERT');
+
+		if (dbCertificate || dbKey || tlsCertificateKeyFile) {
+			this.connectOptions = {
+				...this.connectOptions,
+				tls: true,
 				authMechanism: 'MONGODB-X509',
-				sslCert: dbCertificate,
-				sslKey: dbKey
+				...(tlsCertificateKeyFile && { tlsCertificateKeyFile }),
+				...(dbCAFile && { tlsCAFile: dbCAFile }),
+				...(dbCertificate && { cert: fs.readFileSync(dbCertificate) }),
+				...(dbKey && { key: fs.readFileSync(dbKey) }),
 			};
 		}
 	}
@@ -116,13 +127,17 @@ export class MongoDBApp extends GenericApp {
 		return this.router;
 	}
 
-	public addRoute(router: express.Router, m?: any): void {
-		if (m) {
-			this.app.use('/' + m, router);
-		} else if (this.middleware) {
-			this.app.use('/' + this.middleware, router);
+	protected errorHandler(err: ExtendableError, req: express.Request, res: express.Response, next: express.NextFunction): void {
+		if (err instanceof mongoose.mongo.MongoError) {
+			switch (err.code) {
+				case 11000:
+					res.status(409).json({ error: err.errmsg });
+					break;
+				default:
+					super.errorHandler(err, req, res, next);
+			}
 		} else {
-			this.app.use('/', router);
+			super.errorHandler(err, req, res, next);
 		}
 	}
 }
