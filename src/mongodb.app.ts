@@ -40,7 +40,7 @@ export class MongoDBApp extends GenericApp {
 			if (process.env.NODE_ENV === 'developement') {
 				mongoose.set('debug', true);
 			}
-			await mongoose.connect(this.urlmongodb, this.connectOptions);
+			
 
 			const db = mongoose.connection;
 			(mongoose as any).Promise = global.Promise;
@@ -58,6 +58,14 @@ export class MongoDBApp extends GenericApp {
 			db.on('disconnected', () => {
 				console.log('MongoDB disconnected!');
 			});
+
+			try{
+				await mongoose.connect(this.urlmongodb, this.connectOptions);
+			}catch (error) {
+				console.error('Failed to connect to MongoDB');
+				console.error(error);
+				process.exit(1);
+			}
 		} else {
 			this.app.use('/', (err, res) => {
 				res.send('DB Not activated');
