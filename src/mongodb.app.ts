@@ -18,7 +18,7 @@ export class MongoDBApp extends GenericApp {
 		// DB CONFIG
 		this.app.set('DB_ACTIVE', process.env.DB_ACTIVE ? process.env.DB_ACTIVE === 'true' : true);
 		this.app.set('DB_HOST', process.env.DB_HOST || 'localhost');
-		this.app.set('DB_PORT', process.env.DB_PORT || 0);
+		this.app.set('DB_PORT', Number(process.env.DB_PORT || 0));
 		this.app.set('DB_USER', process.env.DB_USER || '');
 		this.app.set('DB_PWD', process.env.DB_PWD || '');
 		this.app.set('DB_DBNAME', process.env.DB_DBNAME || '');
@@ -86,7 +86,7 @@ export class MongoDBApp extends GenericApp {
 	public createMongoURL(host: string, port: number, dbname: string, user?: string, password?: string): string {
 		this.urlmongodb = this.app.get('DB_PROTOCOL') + '://';
 		if (user) {
-			this.urlmongodb += user + ':' + password + '@';
+			this.urlmongodb += encodeURIComponent(user) + ':' + encodeURIComponent(password || '') + '@';
 		}
 		if (port === 0) {
 			this.urlmongodb += host + '/' + dbname;
@@ -106,11 +106,12 @@ export class MongoDBApp extends GenericApp {
 		const dbKey = this.app.get('DB_KEY');
 		const tlsCertificateKeyFile = this.app.get('DB_KEY_CERT');
 
-		if (dbCertificate || dbKey || tlsCertificateKeyFile) {
+		if (dbCAFile || dbCertificate || dbKey || tlsCertificateKeyFile) {
 			this.connectOptions = {
 				...this.connectOptions,
 				tls: true,
-				authMechanism: 'MONGODB-X509',
+				// A client certificate authenticates the TLS connection. SCRAM still
+				// authenticates DB_USER unless X.509 was explicitly requested in the URI.
 				...(tlsCertificateKeyFile && { tlsCertificateKeyFile }),
 				...(dbCAFile && { tlsCAFile: dbCAFile }),
 				...(dbCertificate && { cert: fs.readFileSync(dbCertificate) }),

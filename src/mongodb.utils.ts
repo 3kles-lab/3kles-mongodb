@@ -12,7 +12,7 @@ export class MongoDBUtils {
         return new MongoDBRouter<T>(controller);
     }
 
-    public static buildSecureRouterFromModel<T = any>(model: mongoose.Model<T>, auth: IAuth): MongoDBRouter {
+    public static buildSecureRouterFromModel<T = any>(model: mongoose.Model<T>, auth: IAuth): MongoDBSecureRouter<T> {
         const service: MongoDBService<T> = new MongoDBService<T>(model);
         const controller: MongoDBController<T> = new MongoDBController<T>(service);
         return new MongoDBSecureRouter<T>(auth, controller);
