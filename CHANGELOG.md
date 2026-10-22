@@ -1,3 +1,10 @@
+## [5.0.1](http://gitlab.3kles.local/3kles/lib/corejs/3kles-mongodb/compare/v5.0.0...v5.0.1) (2026-10-22)
+
+
+### Bug Fixes
+
+* 3kles-corebe version ([268589d](http://gitlab.3kles.local/3kles/lib/corejs/3kles-mongodb/commit/268589dcc1a32be22e20ec8ee7bade52af30b476))
+
 # [5.0.0](http://gitlab.3kles.local/3kles/lib/corejs/3kles-mongodb/compare/v4.2.1...v5.0.0) (2026-10-22)
 
 
