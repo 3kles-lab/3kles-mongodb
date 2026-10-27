@@ -1,3 +1,15 @@
+# [5.1.0](http://gitlab.3kles.local/3kles/lib/corejs/3kles-mongodb/compare/v5.0.1...v5.1.0) (2026-10-27)
+
+
+### Bug Fixes
+
+* upgrade 3kles-corebe version ([eae1da0](http://gitlab.3kles.local/3kles/lib/corejs/3kles-mongodb/commit/eae1da0727bdbde0af010f977079a9130754d200))
+
+
+### Features
+
+* corebe 6.1.xx ([232c85a](http://gitlab.3kles.local/3kles/lib/corejs/3kles-mongodb/commit/232c85abf510c14ed1ed1ae48f9cbe82fa24efa1))
+
 ## [5.0.1](http://gitlab.3kles.local/3kles/lib/corejs/3kles-mongodb/compare/v5.0.0...v5.0.1) (2026-10-22)
 
 
