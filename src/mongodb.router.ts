@@ -1,14 +1,18 @@
-import { GenericController, GenericRouter } from '@3kles/3kles-corebe';
+import { GenericController, GenericRouter, GenericRouterOptions } from '@3kles/3kles-corebe';
 import { MongoDBController } from './mongodb.controller';
-import { Router, RouterOptions } from 'express';
+import { Router } from 'express';
 
 // Class to create a mongodb router from a GenericController
 export class MongoDBRouter<T = any> extends GenericRouter {
-    constructor(controller: MongoDBController<T>, options?: RouterOptions) {
-        super(controller, options);
+    constructor(controller: MongoDBController<T>, options?: GenericRouterOptions) {
+        super(undefined, options);
+        // Install before dynamic addController: inherited validators need the body too.
+        this.useBodyParser(`/${controller.getParameters().modelname}`);
+        this.addController(controller);
     }
 
     public addController(controller: MongoDBController<T>, checker?: any): void {
+        this.useBodyParser(`/${controller.getParameters().modelname}`);
         super.addController(controller, checker);
 
         const crudRouter = Router(this.options);
